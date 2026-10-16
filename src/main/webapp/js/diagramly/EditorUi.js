@@ -16772,7 +16772,26 @@
 			this.hsplitPosition = 0;
 		}
 
+		if (Editor.switchboard)
+		{
+			// The drawing fills the page; shapes and format open on request
+			this.formatWidth = 0;
+			this.hsplitPosition = 0;
+		}
+
 		editorUiCreateUi.apply(this, arguments);
+
+		if (Editor.switchboard && this.editor.graph != null)
+		{
+			// A click on the empty drawing closes the floating shapes panel
+			this.editor.graph.addListener(mxEvent.CLICK, mxUtils.bind(this, function(sender, evt)
+			{
+				if (evt.getProperty('cell') == null && this.isShapesPanelVisible())
+				{
+					this.toggleShapesPanel(false);
+				}
+			}));
+		}
 
 		if (Editor.isSettingsEnabled())
 		{
@@ -22472,7 +22491,8 @@
 				this.hsplitPosition = tmp;
 				this.refresh();
 
-				if (!noScroll)
+				// A floating panel (Switchboard) does not move the drawing
+				if (!noScroll && !Editor.switchboard)
 				{
 					this.diagramContainer.scrollLeft -= x - this.hsplitPosition;
 				}

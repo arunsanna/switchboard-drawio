@@ -387,6 +387,12 @@ Editor.fontSizeUnit = 'px';
 Editor.transitionDelay = 0.1;
 
 /**
+ * Switchboard (sb=1): the drawing fills the page; the toolbar, shapes, format
+ * and page tabs float over it, and shapes and format open on request.
+ */
+Editor.switchboard = urlParams['sb'] == '1';
+
+/**
  * Default unit for page sizes. Default is inches.
  */
 Editor.pageSizeUnit = mxConstants.INCHES;

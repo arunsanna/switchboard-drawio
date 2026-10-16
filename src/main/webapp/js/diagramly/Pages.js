@@ -2453,6 +2453,7 @@ EditorUi.prototype.updateTabContainer = function()
 		}
 
 		var ghLink = document.createElement('a');
+		ghLink.className = 'geGitHubLink';
 		ghLink.href = 'https://github.com/jgraph/drawio';
 		ghLink.target = '_blank';
 		ghLink.style.cssText = 'margin-left:auto;display:flex;align-items:center;' +

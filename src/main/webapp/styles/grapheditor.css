@@ -4084,3 +4084,81 @@ span.geCommentsBadge {
 	transform: translate(0, 0);
 	z-index: 0;
 }
+
+/* Switchboard (sb=1, the simple theme): the drawing fills the page, and the
+   toolbar, the shapes and format panels and the page tabs float over it. */
+.geSwitchboard.geEditor>.geDiagramContainer {
+	grid-column: 1 / -1;
+	grid-row: 1 / -1;
+	margin-left: 0;
+}
+
+.geSwitchboard.geEditor>.geSimpleMainMenu,
+.geSwitchboard.geEditor>.geSidebarContainer,
+.geSwitchboard.geEditor>.geTabContainer {
+	position: absolute;
+	z-index: 3;
+	box-sizing: border-box;
+	border-radius: 12px;
+	border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.10));
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10), 0 8px 24px rgba(0, 0, 0, 0.12);
+	background-color: light-dark(var(--ge-panel-color), var(--ge-dark-panel-color));
+}
+
+.geSwitchboard.geEditor>.geSimpleMainMenu {
+	top: 12px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: auto;
+	max-width: calc(100% - 24px);
+	height: 48px;
+	margin: 0;
+	padding: 0 8px;
+	gap: 4px;
+}
+
+.geSwitchboard.geEditor>.geSidebarContainer {
+	top: 72px;
+	bottom: 12px;
+	overflow: hidden;
+}
+
+.geSwitchboard.geEditor>.geSidebarContainer:not(.geFormatContainer) {
+	left: 12px;
+}
+
+.geSwitchboard.geEditor>.geSidebarContainer.geFormatContainer {
+	right: 12px;
+	overflow-y: auto;
+}
+
+.geSwitchboard.geEditor>.geHsplit {
+	display: none;
+}
+
+/* Set inline by the page tabs and the toolbar */
+.geSwitchboard .geGitHubLink {
+	display: none !important;
+}
+
+.geSwitchboard.geEditor>.geSimpleMainMenu .geStatus {
+	flex-grow: 0 !important;
+	width: auto !important;
+}
+
+/* Empty parts of the toolbar would still take spacing */
+.geSwitchboard.geEditor>.geSimpleMainMenu .geStatus:empty,
+.geSwitchboard.geEditor>.geSimpleMainMenu .geButtonContainer:empty {
+	display: none !important;
+}
+
+.geSwitchboard.geEditor>.geTabContainer {
+	left: 50%;
+	transform: translateX(-50%);
+	bottom: 12px;
+	width: auto;
+	max-width: calc(100% - 24px);
+	height: 36px;
+	padding: 0 4px;
+	overflow: hidden;
+}

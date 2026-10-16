@@ -6828,6 +6828,14 @@ EditorUi.prototype.refresh = function(sizeDidChange)
 	this.sidebarContainer.style.width = this.hsplitPosition + 'px';
 	this.formatContainer.style.width = (this.format != null &&
 		this.formatWidth > 0) ? '' : '0';
+
+	if (Editor.switchboard)
+	{
+		// The panels float over the drawing: hidden while closed
+		this.sidebarContainer.style.display = (this.hsplitPosition > 0) ? '' : 'none';
+		this.formatContainer.style.display = (this.format != null &&
+			this.formatWidth > 0) ? '' : 'none';
+	}
 	
 	if (sizeDidChange ||
 		sw != this.sidebarContainer.style.width ||

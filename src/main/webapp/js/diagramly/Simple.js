@@ -43,6 +43,15 @@ Editor.themes.push('atlas');
 			{
 				node.classList.remove('geSimple');
 			}
+
+			if (value == 'simple' && Editor.switchboard)
+			{
+				node.classList.add('geSwitchboard');
+			}
+			else
+			{
+				node.classList.remove('geSwitchboard');
+			}
 		}
 	};
 	
