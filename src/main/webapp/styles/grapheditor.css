@@ -4086,7 +4086,8 @@ span.geCommentsBadge {
 }
 
 /* Switchboard (sb=1, the simple theme): the drawing fills the page, and the
-   toolbar, the shapes and format panels and the page tabs float over it. */
+   toolbar, the shapes and format panels and the page tabs float over it as
+   Liquid Glass: translucent, blurring the drawing behind them, with a bright rim. */
 .geSwitchboard.geEditor>.geDiagramContainer {
 	grid-column: 1 / -1;
 	grid-row: 1 / -1;
@@ -4099,10 +4100,13 @@ span.geCommentsBadge {
 	position: absolute;
 	z-index: 3;
 	box-sizing: border-box;
-	border-radius: 12px;
-	border: 1px solid light-dark(rgba(0, 0, 0, 0.08), rgba(255, 255, 255, 0.10));
-	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.10), 0 8px 24px rgba(0, 0, 0, 0.12);
-	background-color: light-dark(var(--ge-panel-color), var(--ge-dark-panel-color));
+	border-radius: 18px;
+	border: 1px solid light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.12));
+	box-shadow: inset 0 1px 0 light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.10)),
+		0 1px 3px rgba(0, 0, 0, 0.08), 0 12px 32px rgba(0, 0, 0, 0.16);
+	background-color: light-dark(rgba(250, 250, 252, 0.5), rgba(34, 34, 38, 0.42));
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	backdrop-filter: blur(16px) saturate(180%);
 }
 
 .geSwitchboard.geEditor>.geSimpleMainMenu {
@@ -4127,9 +4131,88 @@ span.geCommentsBadge {
 	left: 12px;
 }
 
+/* The format panel is only as tall as what it shows; it scrolls when longer. Its width
+   stays draw.io's 240px: the controls inside are placed for it. */
 .geSwitchboard.geEditor>.geSidebarContainer.geFormatContainer {
 	right: 12px;
-	overflow-y: auto;
+	bottom: auto;
+	max-height: calc(100% - 84px);
+}
+
+/* Style / Text / Arrange as a compact pill switcher */
+.geSwitchboard .geFormatTitleContainer {
+	height: 30px;
+	margin: 10px 0 10px 10px;
+	padding: 3px;
+	gap: 2px;
+	border-radius: 10px;
+	background: light-dark(rgba(0, 0, 0, 0.06), rgba(255, 255, 255, 0.08));
+}
+
+.geSwitchboard .geFormatTitle,
+.geSwitchboard .geFormatTitle.geActiveFormatTitle {
+	border: none;
+	border-radius: 7px;
+	background: transparent;
+	font-size: 12px;
+}
+
+.geSwitchboard .geFormatTitle.geActiveFormatTitle {
+	background: light-dark(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.16));
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.14);
+}
+
+/* The toolbar and page tabs are hidden until the tools button shows them */
+.geSwitchboard.geEditor>.geSimpleMainMenu,
+.geSwitchboard.geEditor>.geTabContainer {
+	transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+}
+
+.geSwitchboard.geEditor:not(.geSwitchboardTools)>.geSimpleMainMenu {
+	opacity: 0;
+	visibility: hidden;
+	transform: translate(-50%, -8px);
+}
+
+.geSwitchboard.geEditor:not(.geSwitchboardTools)>.geTabContainer {
+	opacity: 0;
+	visibility: hidden;
+	transform: translate(-50%, 8px);
+}
+
+.geSwitchboardToolsButton {
+	display: none;
+}
+
+.geSwitchboard.geEditor>.geSwitchboardToolsButton {
+	position: absolute;
+	top: 16px;
+	right: 12px;
+	z-index: 4;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	cursor: pointer;
+	color: light-dark(#1f1f1f, #f0f0f0);
+	border: 1px solid light-dark(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.12));
+	box-shadow: inset 0 1px 0 light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.10)),
+		0 1px 3px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.16);
+	background-color: light-dark(rgba(250, 250, 252, 0.5), rgba(34, 34, 38, 0.42));
+	-webkit-backdrop-filter: blur(16px) saturate(180%);
+	backdrop-filter: blur(16px) saturate(180%);
+}
+
+.geSwitchboard.geEditor>.geSwitchboardFitButton {
+	right: 60px;
+}
+
+.geSwitchboard.geEditor.geSwitchboardTools>.geSwitchboardToolsButton:not(.geSwitchboardFitButton) {
+	color: light-dark(#ffffff, #ffffff);
+	background-color: light-dark(rgba(124, 92, 255, 0.85), rgba(124, 92, 255, 0.75));
 }
 
 .geSwitchboard.geEditor>.geHsplit {

@@ -6,7 +6,14 @@ it the editor is unchanged draw.io.
 
 - **Layout (`sb=1`, simple theme):** the drawing fills the page. The toolbar floats as a centred
   bar; the shapes and format panels float over the drawing and start closed; the page tabs
-  float at the bottom centre. A click on the empty drawing closes the shapes panel.
+  float at the bottom centre. A click on the empty drawing closes the shapes panel. The
+  floating parts are Liquid Glass (translucent, blurring the drawing behind them, with a bright
+  rim); the format panel is only as tall as its content, and Style / Text / Arrange is a pill
+  switcher (CSS only). The toolbar and page tabs start hidden: a glass tools button at the top
+  right shows them, and hiding them again closes the shapes and format panels
+  (`EditorUi.setSwitchboardToolsVisible`, `geSwitchboardTools` on the editor). A Fit button
+  beside it shows the whole diagram centred, never past 100%, clear of the app's agent tray
+  (`EditorUi.fitSwitchboardDiagram(rightInset)`; Switchboard's page also calls it on open).
   Changes: `grapheditor/Editor.js` (`Editor.switchboard`), `grapheditor/EditorUi.js` (`refresh`),
   `diagramly/EditorUi.js` (closed panels, click to close, no scroll shift),
   `diagramly/Simple.js` (`geSwitchboard` class), `diagramly/Pages.js` (`geGitHubLink`), and the

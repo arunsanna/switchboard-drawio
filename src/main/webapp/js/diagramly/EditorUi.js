@@ -16742,6 +16742,56 @@
 	/**
 	 * Overridden to set sketch mode before UI is created.
 	 */
+	/**
+	 * Switchboard layout: shows or hides the toolbar and page tabs. Hiding them also closes the
+	 * shapes and format panels, which open from the toolbar.
+	 */
+	EditorUi.prototype.setSwitchboardToolsVisible = function(visible)
+	{
+		this.container.classList.toggle('geSwitchboardTools', visible);
+
+		if (!visible)
+		{
+			this.toggleShapesPanel(false);
+			this.toggleFormatPanel(false);
+		}
+	};
+
+	/**
+	 * Switchboard layout: shows the whole diagram centred, never zoomed in past 100%, in the
+	 * part of the page that rightInset (the app's floating tray) leaves visible.
+	 */
+	EditorUi.prototype.fitSwitchboardDiagram = function(rightInset)
+	{
+		var graph = this.editor.graph;
+		var s = graph.view.scale;
+		var t = graph.view.translate;
+		var b = graph.getGraphBounds();
+
+		if (b.width == 0 || b.height == 0)
+		{
+			graph.zoomTo(1);
+			this.resetScrollbars();
+
+			return;
+		}
+
+		var bounds = new mxRectangle(b.x / s - t.x, b.y / s - t.y, b.width / s, b.height / s);
+		var border = 48;
+		var cw = graph.container.clientWidth - border - (rightInset || 0);
+		var ch = graph.container.clientHeight - border;
+		var scale = Math.min(graph.getFitScale(Math.min(cw / bounds.width, ch / bounds.height)), 1);
+		graph.zoomTo(scale, null, null, mxUtils.hasScrollbars(graph.container));
+
+		if (mxUtils.hasScrollbars(graph.container))
+		{
+			t = graph.view.translate;
+			s = graph.view.scale;
+			graph.container.scrollLeft = (bounds.x + t.x) * s - Math.max((cw - bounds.width * s) / 2 + border / 2, 0);
+			graph.container.scrollTop = (bounds.y + t.y) * s - Math.max((ch - bounds.height * s) / 2 + border / 2, 0);
+		}
+	};
+
 	var editorUiCreateUi = EditorUi.prototype.createUi;
 	EditorUi.prototype.createUi = function()
 	{
@@ -16780,6 +16830,37 @@
 		}
 
 		editorUiCreateUi.apply(this, arguments);
+
+		if (Editor.switchboard && this.container != null)
+		{
+			// The toolbar and page tabs stay hidden until this button shows them
+			var toolsButton = document.createElement('div');
+			toolsButton.className = 'geSwitchboardToolsButton';
+			toolsButton.setAttribute('role', 'button');
+			toolsButton.setAttribute('title', 'Tools');
+			toolsButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" ' +
+				'fill="currentColor"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 ' +
+				'4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>';
+			mxEvent.addListener(toolsButton, 'click', mxUtils.bind(this, function()
+			{
+				this.setSwitchboardToolsVisible(!this.container.classList.contains('geSwitchboardTools'));
+			}));
+			this.container.appendChild(toolsButton);
+
+			// One click shows the whole diagram again
+			var fitButton = document.createElement('div');
+			fitButton.className = 'geSwitchboardToolsButton geSwitchboardFitButton';
+			fitButton.setAttribute('role', 'button');
+			fitButton.setAttribute('title', 'Fit');
+			fitButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" ' +
+				'fill="currentColor"><path d="M17 4h3c1.1 0 2 .9 2 2v2h-2V6h-3V4zM4 8V6h3V4H4c-1.1 0-2 .9-2 2v2h2zm16 8v2h-3v2h3c1.1 ' +
+				'0 2-.9 2-2v-2h-2zM7 18H4v-2H2v2c0 1.1.9 2 2 2h3v-2zM18 8H6v8h12V8z"/></svg>';
+			mxEvent.addListener(fitButton, 'click', mxUtils.bind(this, function()
+			{
+				this.fitSwitchboardDiagram(this.switchboardRightInset);
+			}));
+			this.container.appendChild(fitButton);
+		}
 
 		if (Editor.switchboard && this.editor.graph != null)
 		{
